@@ -6,6 +6,9 @@ runConfig:
   maxInstances: 3
   concurrency: 100
 
+# Environment variables — set actual values in Firebase Console:
+# App Hosting → letshuddlesvc → Settings → Environment variables
+# OR run: firebase apphosting:secrets:grantaccess <SECRET_NAME> --project genai-fa4f5
 env:
   - variable: VITE_FIREBASE_API_KEY
     secret: VITE_FIREBASE_API_KEY
