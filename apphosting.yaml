@@ -6,21 +6,34 @@ runConfig:
   maxInstances: 3
   concurrency: 100
 
-buildConfig:
-  commands:
-    - run: npm ci
-    - run: npm run build
-
 env:
   - variable: VITE_FIREBASE_API_KEY
     secret: VITE_FIREBASE_API_KEY
+    availability:
+      - BUILD
+      - RUNTIME
   - variable: VITE_FIREBASE_AUTH_DOMAIN
     secret: VITE_FIREBASE_AUTH_DOMAIN
+    availability:
+      - BUILD
+      - RUNTIME
   - variable: VITE_FIREBASE_PROJECT_ID
     secret: VITE_FIREBASE_PROJECT_ID
+    availability:
+      - BUILD
+      - RUNTIME
   - variable: VITE_FIREBASE_STORAGE_BUCKET
     secret: VITE_FIREBASE_STORAGE_BUCKET
+    availability:
+      - BUILD
+      - RUNTIME
   - variable: VITE_FIREBASE_MESSAGING_SENDER_ID
     secret: VITE_FIREBASE_MESSAGING_SENDER_ID
+    availability:
+      - BUILD
+      - RUNTIME
   - variable: VITE_FIREBASE_APP_ID
     secret: VITE_FIREBASE_APP_ID
+    availability:
+      - BUILD
+      - RUNTIME
