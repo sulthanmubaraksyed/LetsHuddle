@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write   # required for Workload Identity Federation
+      id-token: write
 
     steps:
       - name: Checkout code
@@ -36,14 +36,6 @@ jobs:
           VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
         run: npm run build
 
-      # Option A: Workload Identity Federation (keyless — use when SA key creation is blocked)
-      - name: Authenticate to Google Cloud (Workload Identity)
-        if: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER != '' }}
-        uses: google-github-actions/auth@v2
-        with:
-          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_EMAIL }}
-
       - name: Deploy to Firebase Hosting (Production)
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
@@ -51,12 +43,3 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           projectId: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
           channelId: live
-
-      - name: Install Functions dependencies
-        run: cd functions && npm ci
-
-      - name: Build Functions
-        run: cd functions && npm run build
-
-      - name: Deploy Firebase Functions
-        run: npx firebase-tools deploy --only functions --project ${{ secrets.VITE_FIREBASE_PROJECT_ID }} --token ${{ secrets.FIREBASE_CLI_TOKEN }}

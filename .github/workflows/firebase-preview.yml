@@ -14,7 +14,7 @@ jobs:
       checks: write
       contents: read
       pull-requests: write
-      id-token: write   # required for Workload Identity Federation
+      id-token: write
 
     steps:
       - name: Checkout code
@@ -42,19 +42,10 @@ jobs:
           VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
         run: npm run build
 
-      # Option A: Workload Identity Federation (keyless — use when SA key creation is blocked)
-      - name: Authenticate to Google Cloud (Workload Identity)
-        if: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER != '' }}
-        uses: google-github-actions/auth@v2
-        with:
-          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_EMAIL }}
-
       - name: Deploy to Firebase Preview Channel
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
-          # Use service account JSON if available, otherwise rely on WIF token above
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           projectId: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
           channelId: pr-${{ github.event.pull_request.number }}
